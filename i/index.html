@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Radio">
+<title>Radio</title>
+<style>
+html,body{margin:0;padding:0;background:#111;color:#ddd;font-family:Helvetica,Arial,sans-serif;-webkit-user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-text-size-adjust:none}
+.wrap{text-align:center;padding-top:26px}
+.led{width:10px;height:10px;border-radius:5px;background:#3a3a37;margin:0 auto 18px}
+.led.on{background:#e2261c;-webkit-box-shadow:0 0 10px #e2261c;box-shadow:0 0 10px #e2261c}
+.disc{position:relative;width:260px;height:260px;border-radius:130px;margin:0 auto;background:#c9c9c9;background:-webkit-radial-gradient(35% 30%,circle,#f6f6f6 0%,#d2d2d2 45%,#9c9c9c 100%);-webkit-box-shadow:0 8px 24px rgba(0,0,0,.6);box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.band{position:absolute;top:34px;left:0;width:100%;font-size:18px;letter-spacing:4px;color:#444;font-weight:bold;padding:6px 0}
+.name{position:absolute;bottom:46px;left:16px;right:16px;font-size:16px;letter-spacing:2px;color:#444;font-weight:bold;text-transform:uppercase}
+.b{position:absolute;top:100px;width:60px;height:60px;line-height:60px;font-size:20px;color:#444}
+.prev{left:6px}
+.next{right:6px}
+.pw{position:absolute;left:85px;top:85px;width:90px;height:90px;border-radius:45px;border:2px solid #2b2b2b;-webkit-box-sizing:border-box;box-sizing:border-box;background:#bdbdbd;background:-webkit-radial-gradient(40% 35%,circle,#f6f6f6 0%,#bdbdbd 70%,#9c9c9c 100%)}
+.msg{margin-top:22px;font-size:13px;color:#888;min-height:18px;padding:0 20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="led" id="led"></div>
+  <div class="disc">
+    <div class="band" id="band">AM</div>
+    <div class="b prev" id="prev">&#9664;&#9664;</div>
+    <div class="pw" id="pw"></div>
+    <div class="b next" id="next">&#9654;&#9654;</div>
+    <div class="name" id="name"></div>
+  </div>
+  <div class="msg" id="msg">Tocá el centro para encender</div>
+  <audio id="a" preload="none"></audio>
+</div>
+<script>
+/* Radio para iPod touch (iOS 6): JavaScript antiguo (ES5), sin efectos. Tocar AM/FM cambia de banda. */
+var SL='http://playerservices.streamtheworld.com/api/livestream-redirect/';
+var BANDS=[
+  {n:'AM',st:[
+    ['Rivadavia 630',SL+'RIVADAVIA.mp3'],
+    ['Radio 10 710',SL+'RADIO10.mp3'],
+    ['AM750',SL+'AM750.mp3'],
+    ['Mitre 790',SL+'AM790_56AAC.aac'],
+    ['Nacional 870','http://sa.mp3.icecast.magma.edge-access.net/sc_rad1'],
+    ['La Red 910',SL+'LA_RED_AM910AAC.aac'],
+    ['Origen 950','http://stream.audiostreamhub.com/am950'],
+    ['Splendid 990',SL+'AM990.mp3']
+  ]},
+  {n:'FM',st:[
+    ['Nacional Rock',  'http://sa.mp3.icecast.magma.edge-access.net/sc_rad2'],
+    ['Metro 95.1',SL+'METRO.mp3'],
+    ['Rock & Pop 95.9',SL+'ROCKANDPOPAAC.aac'],
+    ['Blue 100.7',SL+'BLUE_FM_100_7AAC.aac'],
+    ['Aspen 102.3',SL+'ASPEN.mp3'],
+    ['Milenium 106.7','http://sonicpanel.hostradios.com/8002/stream']
+  ]}
+];
+var b=0,pos=[6,3],on=false;
+var a=document.getElementById('a'),led=document.getElementById('led'),nm=document.getElementById('name'),bd=document.getElementById('band'),msg=document.getElementById('msg');
+function cur(){return BANDS[b].st[pos[b]];}
+function show(){nm.innerHTML=cur()[0].replace(/&/g,'&amp;');bd.innerHTML=BANDS[b].n;}
+function say(t){msg.innerHTML=t;}
+function play(){a.src=cur()[1];a.load();a.play();say('Conectando…');}
+function stop(){a.pause();a.removeAttribute('src');try{a.load();}catch(e){}say('Apagada');}
+function power(){on=!on;led.className=on?'led on':'led';if(on)play();else stop();}
+function step(d){var n=BANDS[b].st.length;pos[b]=(pos[b]+d+n)%n;show();if(on)play();}
+function band(){b=(b+1)%BANDS.length;show();if(on)play();}
+a.addEventListener('playing',function(){say('');},false);
+a.addEventListener('waiting',function(){if(on)say('Conectando…');},false);
+a.addEventListener('error',function(){if(on&&a.getAttribute('src'))say('Esta emisora no anda en el iPod. Probá la siguiente.');},false);
+document.getElementById('pw').addEventListener('click',power,false);
+document.getElementById('next').addEventListener('click',function(){step(1);},false);
+document.getElementById('prev').addEventListener('click',function(){step(-1);},false);
+bd.addEventListener('click',band,false);
+show();
+</script>
+</body>
+</html>
