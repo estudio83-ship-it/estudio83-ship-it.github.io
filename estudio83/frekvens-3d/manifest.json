@@ -1,0 +1,24 @@
+{
+  "id": "/estudio83/frekvens-3d/",
+  "name": "FREKVENS Portable · 3D",
+  "short_name": "FREKVENS Portable · 3D",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e9e7e2",
+  "theme_color": "#e9e7e2",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

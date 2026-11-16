@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- © 2026 Estudio83. Todos los derechos reservados. Prohibida su copia, modificación o distribución sin autorización. -->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>FREKVENS Portable · 3D</title>
+<meta name="author" content="Estudio83">
+<meta name="copyright" content="© 2026 Estudio83. Todos los derechos reservados. Prohibida su copia, modificación o distribución sin autorización.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="color-scheme" content="light">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root{--bg:#f5f5f7;--ink:#1d1d1f;--mute:#6e6e73;--campo:#fff;--borde:#d2d2d7;--azul:#0071e3;--error:#e30000}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.g{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px 72px;text-align:center}
+.g[hidden]{display:none}
+.ic{width:104px;height:104px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.08);margin-bottom:22px}
+h1{margin:0;font-size:30px;font-weight:600;letter-spacing:-.02em}
+.sub{margin:8px 0 28px;font-size:17px;color:var(--mute);line-height:1.35}
+form{width:100%;max-width:320px;display:flex;flex-direction:column;gap:12px}
+.oculto{position:absolute;left:-9999px}
+input{width:100%;height:52px;border-radius:999px;border:1px solid var(--borde);background:var(--campo);color:var(--ink);font-size:17px;text-align:center;letter-spacing:.08em;outline:none;-webkit-appearance:none;font-family:inherit}
+input:focus{border-color:var(--azul);box-shadow:0 0 0 3px rgba(0,113,227,.25)}
+input::placeholder{color:var(--mute);letter-spacing:0}
+button{height:52px;border:0;border-radius:999px;background:var(--azul);color:#fff;font-size:17px;font-weight:600;font-family:inherit;cursor:pointer}
+button:active{opacity:.85}
+.m{min-height:20px;margin-top:14px;font-size:14px;color:var(--error)}
+.c{position:fixed;bottom:18px;left:0;right:0;text-align:center;font-size:12px;color:var(--mute)}
+</style>
+</head>
+<body>
+<main class="g" id="g" hidden>
+  <img class="ic" src="icon-192.png" alt="">
+  <h1>FREKVENS Portable · 3D</h1>
+  <p class="sub">Ingresá la clave para abrir la app.</p>
+  <form id="f">
+    <label class="oculto" for="k">Clave</label>
+    <input id="k" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Clave" required>
+    <button type="submit">Abrir</button>
+  </form>
+  <div class="m" id="m" role="status" aria-live="polite"></div>
+</main>
+<div class="c">© 2026 Estudio83 · Todos los derechos reservados</div>
+<script data-goatcounter="https://estudio83.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+(()=>{
+const D={salt:"2Ap+Ml3kXYEXhzh2ECN4CA==",iv:"0vt5OAS2AIbUBNbS",it:600000},K="e83-llave-frekvens-3d",CT="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";
+/* métricas (GoatCounter): eventos de la pantalla de clave */
+const gc=(p,t,n=0)=>{const g=window.goatcounter;if(g&&g.count){try{g.count({path:p,title:t,event:true});}catch(_){}}else if(n<20)setTimeout(()=>gc(p,t,n+1),500);};
+const bin=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const b64=a=>btoa(String.fromCharCode(...new Uint8Array(a)));
+async function abrir(key){
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:bin(D.iv)},key,bin(CT));
+  const h=new TextDecoder().decode(pt);
+  if(document.readyState!=="complete")await new Promise(r=>addEventListener("load",r,{once:true}));
+  document.open();document.write(h);document.close();}
+async function desdeClave(p){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(p.trim().toLowerCase()),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:bin(D.salt),iterations:D.it,hash:"SHA-256"},base,{name:"AES-GCM",length:256},true,["decrypt"]);}
+const g=document.getElementById("g"),m=document.getElementById("m"),k=document.getElementById("k");
+(async()=>{let r=null;try{r=localStorage.getItem(K);}catch(_){}
+  if(r){try{await abrir(await crypto.subtle.importKey("raw",bin(r),"AES-GCM",false,["decrypt"]));return;}
+    catch(_){try{localStorage.removeItem(K);}catch(__){}}}
+  g.hidden=false;k.focus();})();
+document.getElementById("f").addEventListener("submit",async ev=>{ev.preventDefault();m.textContent="Abriendo…";m.style.color="var(--mute)";
+  try{const key=await desdeClave(k.value);await crypto.subtle.decrypt({name:"AES-GCM",iv:bin(D.iv)},key,bin(CT));
+    gc("clave-correcta-frekvens-3d","Clave correcta: FREKVENS Portable · 3D");
+    try{localStorage.setItem(K,b64(await crypto.subtle.exportKey("raw",key)));}catch(_){}
+    await abrir(key);}catch(_){gc("clave-incorrecta-frekvens-3d","Clave incorrecta: FREKVENS Portable · 3D");m.style.color="";m.textContent="Clave incorrecta";k.select();}});
+if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>

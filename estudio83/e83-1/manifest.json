@@ -1,0 +1,24 @@
+{
+  "id": "/estudio83/e83-1/",
+  "name": "E83-1",
+  "short_name": "E83-1",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#3a3a3a",
+  "theme_color": "#3a3a3a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
