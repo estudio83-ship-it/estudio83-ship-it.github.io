@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estudio83</title>
+<meta name="description" content="Piezas interactivas de Estudio83">
+<meta name="theme-color" content="#0e0e0e">
+<style>
+  :root{--bg:#0e0e0e;--card:#171717;--line:#262626;--ink:#f2f2ef;--mute:#8d8d88;--acc:#e2261c}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  header{max-width:1120px;margin:0 auto;padding:28px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .marca{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
+  .led{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px 2px rgba(226,38,28,.55)}
+  nav{display:flex;gap:18px;font-size:14px;color:var(--mute)}
+  nav a:hover{color:var(--ink)}
+  .intro{max-width:1120px;margin:0 auto;padding:72px 24px 40px}
+  h1{font-size:clamp(40px,7vw,76px);line-height:.95;letter-spacing:-.03em;font-weight:700}
+  .intro p{margin-top:16px;font-size:18px;color:var(--mute);max-width:520px;line-height:1.45}
+  h2{max-width:1120px;margin:0 auto;padding:28px 24px 14px;font-size:12px;letter-spacing:.18em;color:var(--mute);font-weight:600}
+  .grilla{max-width:1120px;margin:0 auto;padding:0 24px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .card{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-3px);border-color:#3a3a3a}
+  .card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#111}
+  .txt{padding:18px 20px 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+  .txt h3{font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .txt p{margin-top:4px;font-size:14px;color:var(--mute);line-height:1.4}
+  .abrir{flex:none;font-size:14px;font-weight:600;white-space:nowrap}
+  .card:hover .abrir{color:var(--acc)}
+  .tag{display:inline-block;margin-top:8px;font-size:11px;letter-spacing:.08em;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:3px 8px}
+  footer{max-width:1120px;margin:0 auto;padding:48px 24px 40px;font-size:12px;color:var(--mute)}
+  @media (max-width:720px){.grilla{grid-template-columns:1fr}.intro{padding-top:48px}}
+</style>
+</head>
+<body>
+<header>
+  <a class="marca" href="./"><span class="led"></span>Estudio83</a>
+  <nav><a href="#radios">Radios</a><a href="#instrumentos">Instrumentos</a><a href="#juegos">Juegos</a></nav>
+</header>
+<section class="intro">
+  <h1>Piezas<br>interactivas</h1>
+  <p>Radios, instrumentos y juegos que se tocan, se escuchan y se instalan en el teléfono.</p>
+</section>
+
+<h2 id="radios">RADIOS</h2>
+<div class="grilla">
+  <a class="card" data-goatcounter-click="indice-abrir-radio-bo" data-goatcounter-title="Índice: abrir radio-bo" href="https://estudio83-ship-it.github.io/radiobo/"><img src="img/radio-bo.jpg" alt="Radio B&amp;O"><div class="txt"><div><h3>Radio B&amp;O</h3><p>Un disco de aluminio que se toca para encender, cambiar de radio y dormir.</p><span class="tag">CON CLAVE</span></div><span class="abrir">Abrir →</span></div></a>
+  <a class="card" data-goatcounter-click="indice-abrir-radio-hd" data-goatcounter-title="Índice: abrir radio-hd" href="https://estudio83-ship-it.github.io/estudio83/radio/"><img src="img/radio-hd.jpg" alt="Radio HD"><div class="txt"><div><h3>Radio HD</h3><p>Una radio cilíndrica de madera con dial de verdad y sonido de AM.</p><span class="tag">CON CLAVE</span></div><span class="abrir">Abrir →</span></div></a>
+  <a class="card" data-goatcounter-click="indice-abrir-radio-tape" data-goatcounter-title="Índice: abrir radio-tape" href="https://estudio83-ship-it.github.io/estudio83/radio-tape/"><img src="img/radio-tape.jpg" alt="Radio Tape"><div class="txt"><div><h3>Radio Tape</h3><p>Un grabador de cinta abierta con radio, juegos y sampler.</p><span class="tag">CON CLAVE</span></div><span class="abrir">Abrir →</span></div></a>
+  <a class="card" data-goatcounter-click="indice-abrir-radio-ipod" data-goatcounter-title="Índice: abrir radio-ipod" href="https://estudio83-ship-it.github.io/i/"><img src="img/radio-ipod.jpg" alt="Radio para iPod"><div class="txt"><div><h3>Radio para iPod</h3><p>La Radio B&amp;O hecha para un iPod touch de 2010.</p></div><span class="abrir">Abrir →</span></div></a>
+</div>
+
+<h2 id="instrumentos">INSTRUMENTOS</h2>
+<div class="grilla">
+  <a class="card" data-goatcounter-click="indice-abrir-sampler" data-goatcounter-title="Índice: abrir sampler" href="https://estudio83-ship-it.github.io/estudio83/sampler/"><img src="img/sampler.jpg" alt="Sampler"><div class="txt"><div><h3>Sampler de bolsillo</h3><p>Ocho pads, teclado, secuenciador y una biblioteca de sonidos.</p><span class="tag">CON CLAVE</span></div><span class="abrir">Abrir →</span></div></a>
+</div>
+
+<h2 id="juegos">JUEGOS</h2>
+<div class="grilla">
+  <a class="card" href="#"><img src="img/fuegos.jpg" alt="Fuegos"><div class="txt"><div><h3>Fuegos</h3><p>Fuegos artificiales que se cargan y se lanzan sobre el río.</p><span class="tag">SIN PUBLICAR</span></div><span class="abrir">Abrir →</span></div></a>
+  <a class="card" href="#"><img src="img/tetera.jpg" alt="Tetera Táctil"><div class="txt"><div><h3>Tetera Táctil</h3><p>Inclinar la tetera y llenar la taza justo hasta la marca.</p><span class="tag">SIN PUBLICAR</span></div><span class="abrir">Abrir →</span></div></a>
+</div>
+
+<footer>© 2026 Estudio83</footer>
+<script data-goatcounter="https://estudio83.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
