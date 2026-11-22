@@ -1,5 +1,5 @@
 /* Guarda la app para abrirla sin conexión (las radios y el clima siempre van por internet). */
-const VERSION = 'rbo-web-1.42';
+const VERSION = 'rbo-web-1.43';
 const ARCHIVOS = [
   './', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-180.png',
   'js/arranque.js',

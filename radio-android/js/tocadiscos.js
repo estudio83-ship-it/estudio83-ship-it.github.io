@@ -17,7 +17,7 @@ const tocadiscos = (() => {
 	const tfy = H - kAltoTecla;                       /* arriba de las teclas */
 	const c = { x: Math.round(W / 2) + 3, y: Math.round(tfy - 13 - kR) };   /* el centro del plato */
 	const altoDisplay = c.y - kR - 13;                /* la franja de arriba del plato */
-	const cerrada = { x: 12, y: Math.max(12, Math.round((altoDisplay - 72) / 2)), w: W - 24, h: 72 };
+	const cerrada = { x: 12, y: 12, w: W - 24, h: Math.max(72, altoDisplay - 12 - 10) };   /* arriba de todo, hasta el disco */
 	const abierta = { x: 12, y: 12, w: W - 24, h: tfy - 10 - 12 };
 
 	/* ---------- el panel (quieto) ---------- */
@@ -71,13 +71,10 @@ const tocadiscos = (() => {
 		ctx.fillStyle = degrade(ctx, ['rgb(208,208,206)', 'rgb(192,192,190)'], W, 0, 0, H);
 		ctx.fillRect(0, 0, W, H);
 		granulado(ctx, 0, 0, W, H, 19);
-		ctx.fillStyle = G(204, 204, 202);
-		ctx.beginPath(); ctx.arc(c.x, c.y, kR, 0, 7); ctx.fill();
-		ctx.save();
-		ctx.translate(c.x - kR, c.y - kR);
-		ctx.save(); ctx.beginPath(); ctx.arc(kR, kR, kR, 0, 7); ctx.clip(); granulado(ctx, 0, 0, 2 * kR, 2 * kR, 83); ctx.restore();
-		frente(ctx);
-		ctx.restore();
+		/* un satinado muy suave: la luz que cae de arriba a la izquierda sobre el arenado */
+		const sat = ctx.createRadialGradient(W * 0.2, H * 0.1, 0, W * 0.2, H * 0.1, H * 0.9);
+		sat.addColorStop(0, 'rgba(255,255,255,.10)'); sat.addColorStop(1, 'rgba(255,255,255,0)');
+		ctx.fillStyle = sat; ctx.fillRect(0, 0, W, H);
 	}
 	pintarPanel();
 
@@ -85,6 +82,21 @@ const tocadiscos = (() => {
 	const plato = lienzo(2 * kR, 2 * kR, p, c.x - kR, c.y - kR);
 	plato.style.pointerEvents = 'none';
 	(function detalles(ctx) {
+		/* el disco de aluminio granallado; el arenado tiene zonas apenas más claras u oscuras, y como giran con el
+		   plato se nota que da vueltas */
+		ctx.save();
+		ctx.beginPath(); ctx.arc(kR, kR, kR, 0, 7); ctx.clip();
+		ctx.fillStyle = G(204, 204, 202); ctx.fillRect(0, 0, 2 * kR, 2 * kR);
+		let s = 4242;
+		const az = () => { s = (Math.imul(s, 1103515245) + 12345) >>> 0; return (s >>> 8) / 16777216; };
+		for (let i = 0; i < 70; i++) {
+			const a = az() * 2 * Math.PI, r = Math.sqrt(az()) * kR, x = kR + r * Math.cos(a), y = kR + r * Math.sin(a), rr = 8 + az() * 34;
+			const g = ctx.createRadialGradient(x, y, 0, x, y, rr), cl = az() < 0.5;
+			g.addColorStop(0, cl ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.032)'); g.addColorStop(1, cl ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0)');
+			ctx.fillStyle = g; ctx.fillRect(x - rr, y - rr, 2 * rr, 2 * rr);
+		}
+		granulado(ctx, 0, 0, 2 * kR, 2 * kR, 83, 0.16);
+		ctx.restore();
 		ctx.save();
 		ctx.translate(kR, kR);
 		ctx.strokeStyle = 'rgba(58,58,58,.8)'; ctx.lineWidth = 0.6;
@@ -92,15 +104,6 @@ const tocadiscos = (() => {
 		ctx.beginPath();
 		for (const lado of [-1, 1]) { ctx.moveTo(lado * (kRCentro + 5) * ca, lado * (kRCentro + 5) * sa); ctx.lineTo(lado * (kR - 6) * ca, lado * (kR - 6) * sa); }
 		ctx.stroke();
-		for (const an of [-1.861, 0.220, 2.381]) {
-			const px = 22.5 * Math.cos(an), py = 22.5 * Math.sin(an);
-			const el = (x, y, w, h, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, 7); ctx.fill(); };
-			el(px - 2.4, py - 2.0, 4.8, 4.8, 'rgba(255,255,255,.6)');
-			el(px - 2.4, py - 2.4, 4.8, 4.8, G(62, 62, 64));
-			el(px - 1.7, py - 1.7, 3.4, 3.4, G(196, 196, 198));
-			el(px - 1.2, py - 1.3, 1.3, 1.1, 'rgba(255,255,255,.95)');
-			el(px + 0.1, py + 0.2, 1.2, 1.2, G(110, 110, 112));
-		}
 		const tinta = 'rgba(62,62,62,.9)';
 		ctx.fillStyle = tinta; ctx.strokeStyle = tinta;
 		ctx.font = '300 10.5px "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif';
@@ -121,6 +124,26 @@ const tocadiscos = (() => {
 		ctx.restore();
 		ctx.restore();
 	})(plato.ctx);
+	/* la luz quieta sobre el disco (el brillo, la buña y el centro cromado) y arriba los tres tornillos, que giran */
+	const luces = lienzo(2 * kR, 2 * kR, p, c.x - kR, c.y - kR);
+	luces.style.pointerEvents = 'none';
+	frente(luces.ctx);
+	const tornillos = lienzo(2 * kR, 2 * kR, p, c.x - kR, c.y - kR);
+	tornillos.style.pointerEvents = 'none';
+	(ctx => {
+		ctx.save(); ctx.translate(kR, kR);
+		for (const an of [-1.861, 0.220, 2.381]) {
+			const px = 22.5 * Math.cos(an), py = 22.5 * Math.sin(an);
+			const el = (x, y, w, h, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, 7); ctx.fill(); };
+			el(px - 2.4, py - 2.0, 4.8, 4.8, 'rgba(255,255,255,.6)');
+			el(px - 2.4, py - 2.4, 4.8, 4.8, G(62, 62, 64));
+			el(px - 1.7, py - 1.7, 3.4, 3.4, G(196, 196, 198));
+			el(px - 1.2, py - 1.3, 1.3, 1.1, 'rgba(255,255,255,.95)');
+			el(px + 0.1, py + 0.2, 1.2, 1.2, G(110, 110, 112));
+		}
+		ctx.restore();
+	})(tornillos.ctx);
+	const girar = a => { plato.style.transform = tornillos.style.transform = `rotate(${a}rad)`; };
 	const motor = { ang: guardado.leer('anguloPlato', 0), vel: 0 };
 	const W33 = 2 * Math.PI * (100 / 3) / 60;   /* 33⅓ vueltas por minuto, en radianes por segundo */
 
@@ -195,8 +218,7 @@ const tocadiscos = (() => {
 		ctx.restore();
 		const cx = w / 2, cy = 30 + (ap ? 1 : 0);
 		if (icono === 0) {
-			ctx.fillStyle = G(232, 88, 42); ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 7); ctx.fill();
-			ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.beginPath(); ctx.ellipse(cx - 1, cy - 2.75, 2.5, 1.75, 0, 0, 7); ctx.fill();
+			ctx.fillStyle = G(236, 98, 44); ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 7); ctx.fill();   /* tinta plana, sin luz */
 		} else if (icono === 1) {
 			ctx.fillStyle = G(20, 20, 20); ctx.beginPath(); ctx.moveTo(cx - 5, cy - 7); ctx.lineTo(cx + 7, cy); ctx.lineTo(cx - 5, cy + 7); ctx.fill();
 		} else { ctx.fillStyle = G(20, 20, 20); ctx.fillRect(cx - 5.5, cy - 5.5, 11, 11); }
@@ -348,8 +370,8 @@ const tocadiscos = (() => {
 
 	/* el display grande: una grilla de puntos (un pixel por punto, agrandado sin suavizar) con la rejilla encima */
 	const mw = abierta.w - 16, mh = Math.floor((abierta.h - 72 - 8) / kP) * kP;
-	const cols = mw / kP, rows = mh / kP, oyMenu = Math.max(0, (rows - 140) >> 1);
-	const matriz = div(ventana, 8, 72, mw, mh, 'opacity:0;transition:opacity .42s');
+	const cols = mw / kP, rows = mh / kP, oyMenu = 0;
+	const matriz = div(ventana, 8, 72, mw, mh);   /* si el display cerrado es alto, ya se ve el clima de ahora */
 	const chico = document.createElement('canvas'); chico.width = cols; chico.height = rows;
 	chico.className = 'abs pix'; chico.style.cssText += `left:0;top:0;width:${mw}px;height:${mh}px`;
 	const halo = document.createElement('canvas'); halo.width = cols; halo.height = rows;
@@ -439,7 +461,7 @@ const tocadiscos = (() => {
 		return Object.assign({}, k, { alarma: a.on, alarmaH: a.h, alarmaM: a.m, alarmaRadio: limpio(a.on ? a.nombre : radio.actual()[0]).toUpperCase() });
 	}
 	function pintarMenu() {
-		if (!abiertoDisp || geometria) return;
+		if (geometria) return;
 		Tab.menu(lz, datosMenu(), performance.now() / 1000, oyMenu);
 		mostrarMatriz();
 	}
@@ -464,15 +486,16 @@ const tocadiscos = (() => {
 		abiertoDisp = true; geometria = false;
 		pedirClima(); pintarMenu();
 		ponerVentana(abierta, true);
-		matriz.style.opacity = 1; volumen.style.opacity = 0; volumen.style.pointerEvents = 'none';
-		setTimeout(() => { if (abiertoDisp) plato.style.visibility = 'hidden'; }, 420);
+		volumen.style.opacity = 0; volumen.style.pointerEvents = 'none';
+		setTimeout(() => { if (abiertoDisp) plato.style.visibility = tornillos.style.visibility = 'hidden'; }, 420);
 	}
 	function cerrar() {
 		if (!abiertoDisp) return;
 		abiertoDisp = false; geometria = false;
-		plato.style.visibility = 'visible';
+		plato.style.visibility = tornillos.style.visibility = 'visible';
 		ponerVentana(cerrada, true);
-		matriz.style.opacity = 0; volumen.style.opacity = 1; volumen.style.pointerEvents = '';
+		volumen.style.opacity = 1; volumen.style.pointerEvents = '';
+		pintarMenu();
 	}
 	const toque = div(p, 0, 0, 0, 0, 'z-index:5');
 	ponerVentana(cerrada, false);
@@ -522,9 +545,9 @@ const tocadiscos = (() => {
 		if (motor.vel !== objetivo) motor.vel = objetivo > motor.vel ? Math.min(1, motor.vel + dt / 3) : Math.max(0, motor.vel - dt / 3);
 		motor.ang = (motor.ang + motor.vel * W33 * dt) % (2 * Math.PI);
 		if (pag.actual === 1 && !document.hidden) {
-			if (!abiertoDisp && motor.vel > 0) plato.style.transform = `rotate(${motor.ang}rad)`;
+			if (!abiertoDisp && motor.vel > 0) girar(motor.ang);
 			const n = nivelAudio(); pintarVu(n[0], n[1]);
-			if (abiertoDisp) {
+			if (abiertoDisp || cerrada.h > 100) {
 				if (geometria) { if (t - ultimoGeo >= 32) { const d2 = antes ? Math.min(0.1, (t - antes) / 1000) : 1 / 30; antes = t; ultimoGeo = t; Tab.geoPaso(geo, lz, d2); mostrarMatriz(); } }
 				else if (t - ultimoMenu >= 66) { ultimoMenu = t; pintarMenu(); }
 			}
@@ -543,7 +566,7 @@ const tocadiscos = (() => {
 	return {
 		empezar() {
 			armarFondoFilas(); armarMatriz(); pintarDisplay(); pintarLuz();
-			plato.style.transform = `rotate(${motor.ang}rad)`;
+			girar(motor.ang);
 			pedirClima();
 			setInterval(() => { pintarDisplay(); vigilarDespertador(); }, 1000);
 			setInterval(pedirClima, 60000);

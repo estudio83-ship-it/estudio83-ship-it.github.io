@@ -53,10 +53,10 @@
 <main>
   <h1>Radio para iPod</h1>
   <p class="bajada">La Radio B&amp;O como app de verdad para iPod touch 4 y iPhone 4S con iOS 6 y jailbreak: el disco, el tocadiscos con su display de puntos, los relojes y la consola de bolsillo.</p>
-  <span class="version">VERSIÓN 1.42</span>
+  <span class="version">VERSIÓN 1.43</span>
   <div class="botones">
-    <a class="boton principal" href="RadioBO-1.42.deb" download data-goatcounter-click="radio-ipod-deb"><b>Bajar RadioBO-1.42.deb</b><span>Recomendado · se instala con OpenSSH o Cydia</span></a>
-    <a class="boton" href="RadioBO-1.42.ipa" download data-goatcounter-click="radio-ipod-ipa"><b>Bajar RadioBO-1.42.ipa</b><span>Alternativa · necesita AppSync</span></a>
+    <a class="boton principal" href="RadioBO-1.43.deb" download data-goatcounter-click="radio-ipod-deb"><b>Bajar RadioBO-1.43.deb</b><span>Recomendado · se instala con OpenSSH o Cydia</span></a>
+    <a class="boton" href="RadioBO-1.43.ipa" download data-goatcounter-click="radio-ipod-ipa"><b>Bajar RadioBO-1.43.ipa</b><span>Alternativa · necesita AppSync</span></a>
     <a class="boton" href="../radio-android/" data-goatcounter-click="radio-android"><b>App para Android</b><span>Se abre en Chrome y se instala desde el menú</span></a>
     <a class="boton" href="../i/" data-goatcounter-click="radio-ipod-web"><b>Versión web</b><span>La de antes, sin instalar nada</span></a>
   </div>
@@ -70,6 +70,7 @@
 
   <h2>LO NUEVO</h2>
   <ul class="nuevo">
+    <li>1.43: terminación de aluminio granallado, satinado parejo; el disco gira con su arenado; el botón de grabar es plano, sin brillo; el display va arriba de todo hasta el disco.</li>
     <li>El display del tocadiscos, calado en la carcasa con marco de metal: arriba la banda, la radio y la frecuencia; abajo el día, la temperatura y la hora.</li>
     <li>Deslizándolo hacia abajo se abre hasta las teclas: el clima de ahora, la lluvia de las próximas 24 horas y el pronóstico de cuatro días.</li>
     <li>Radio despertador: a la hora elegida prende la radio que dejaste puesta.</li>
@@ -89,9 +90,9 @@
   <ol class="pasos">
     <li>El aparato tiene que tener iOS 6 con jailbreak y <b>OpenSSH</b> instalado desde Cydia.</li>
     <li>Bajá el <code>.deb</code> a la computadora y copialo al aparato (cambiá <code>IP_DEL_IPHONE</code> por la que figura en Ajustes → Wi-Fi):
-      <pre>scp -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa RadioBO-1.42.deb root@IP_DEL_IPHONE:/var/root/</pre></li>
+      <pre>scp -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa RadioBO-1.43.deb root@IP_DEL_IPHONE:/var/root/</pre></li>
     <li>Instalala (si ya tenés una versión anterior, se instala encima):
-      <pre>ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa root@IP_DEL_IPHONE "dpkg -i /var/root/RadioBO-1.42.deb &amp;&amp; su -c uicache mobile"</pre></li>
+      <pre>ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa root@IP_DEL_IPHONE "dpkg -i /var/root/RadioBO-1.43.deb &amp;&amp; su -c uicache mobile"</pre></li>
     <li>Listo: el ícono aparece en la pantalla de inicio.</li>
   </ol>
   <p class="nota">La contraseña de fábrica de root es <code>alpine</code>. Si usás el <code>.ipa</code>, hace falta AppSync y un instalador de .ipa.</p>

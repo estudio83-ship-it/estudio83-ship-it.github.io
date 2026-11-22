@@ -55,26 +55,30 @@ function degrade(ctx, colores, x0, y0, x1, y1, lugares) {
 	return g;
 }
 
-/* grano fino: una baldosa de 64 puntos con puntitos, repetida */
+/* granallado: aluminio arenado, satinado parejo. Un grano por pixel real de la pantalla (ruido casi gaussiano y suave,
+   sin puntitos sueltos), en una baldosa de 128 x 128 pixeles que se repite. */
 const tejas = {};
-function granulado(ctx, x, y, w, h, semilla) {
-	let t = tejas[semilla];
-	if (!t) {
-		t = document.createElement('canvas');
-		t.width = t.height = Math.round(64 * S.R);
-		const c = t.getContext('2d');
-		c.scale(S.R, S.R);
-		let s = semilla;
-		const az = () => { s = (s * 1103515245 + 12345) >>> 0; return ((s >>> 8) & 0xffff) / 65536; };
-		for (let i = 0; i < 64 * 64 * 2; i++) {
-			const px = az() * 64, py = az() * 64, claro = az() < 0.5, a = 0.03 + az() * 0.06;
-			c.fillStyle = claro ? `rgba(255,255,255,${a})` : `rgba(0,0,0,${a})`;
-			c.fillRect(px, py, 0.5, 0.5);
-		}
-		tejas[semilla] = t;
+function tejaGranallado(semilla, fuerza) {
+	const k = semilla + '/' + fuerza;
+	if (tejas[k]) return tejas[k];
+	const N = 128, t = document.createElement('canvas');
+	t.width = t.height = N;
+	const c = t.getContext('2d'), im = c.createImageData(N, N), d = im.data, v = new Float32Array(N * N);
+	let s = semilla >>> 0;
+	const az = () => { s = (Math.imul(s, 1103515245) + 12345) >>> 0; return (s >>> 8) / 16777216; };
+	for (let i = 0; i < N * N; i++) v[i] = az() + az() + az() - 1.5;
+	for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+		/* un poquito de los vecinos: el grano se redondea como la arena y no queda como ruido de TV */
+		const i = y * N + x, n = v[i] * 0.7 + (v[y * N + (x + 1) % N] + v[((y + 1) % N) * N + x]) * 0.15;
+		const a = Math.min(1, Math.abs(n) * fuerza), j = i * 4;
+		d[j] = d[j + 1] = d[j + 2] = n > 0 ? 255 : 0; d[j + 3] = Math.round(a * 255);
 	}
+	c.putImageData(im, 0, 0);
+	return (tejas[k] = t);
+}
+function granulado(ctx, x, y, w, h, semilla, fuerza = 0.11) {
 	ctx.save();
-	const p = ctx.createPattern(t, 'repeat');
+	const p = ctx.createPattern(tejaGranallado(semilla, fuerza), 'repeat');
 	p.setTransform && p.setTransform(new DOMMatrix().scale(1 / S.R));
 	ctx.fillStyle = p;
 	ctx.fillRect(x, y, w, h);
