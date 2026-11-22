@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Radio B&amp;O">
+<title>Radio B&amp;O</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;background:#111;overflow:hidden;overscroll-behavior:none}
+  body{font-family:Helvetica,"Helvetica Neue",Roboto,Arial,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
+  #app{position:absolute;left:0;top:0;width:320px;transform-origin:0 0;overflow:hidden;background:#111}
+  #carril{position:absolute;left:0;top:0;height:100%;will-change:transform}
+  .pagina{position:absolute;top:0;width:321px;height:100%;overflow:hidden}
+  .abs{position:absolute}
+  canvas{display:block}
+  .pix{image-rendering:pixelated;image-rendering:crisp-edges}
+  #puntos{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);display:flex;gap:7px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+  #puntos i{width:6px;height:6px;border-radius:3px;background:rgba(0,0,0,.22);display:block}
+  #puntos.oscuro i{background:rgba(255,255,255,.22)}
+  #puntos i.esta{background:rgba(0,0,0,.75)}
+  #puntos.oscuro i.esta{background:rgba(255,255,255,.75)}
+  #empezar{position:absolute;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding-bottom:28px;color:#777;font-size:12px;pointer-events:none;transition:opacity .6s}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="carril"></div>
+  <div id="puntos"><i></i><i></i><i></i><i></i></div>
+</div>
+<script src="js/pixeles.js"></script>
+<script src="js/base.js"></script>
+<script src="js/radio.js"></script>
+<script src="js/tablero.js"></script>
+<script src="js/tocadiscos.js"></script>
+<script src="js/relojes.js"></script>
+<script src="js/consola.js"></script>
+<script src="js/juegos.js"></script>
+<script src="js/mando.js"></script>
+<script src="js/arranque.js"></script>
+</body>
+</html>
