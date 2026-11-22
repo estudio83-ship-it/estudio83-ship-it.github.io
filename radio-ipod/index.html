@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radio para iPod · Estudio83</title>
+<meta name="description" content="La Radio B&amp;O como app para iPod touch y iPhone con iOS 6 y jailbreak. Versión 1.42.">
+<meta name="theme-color" content="#0e0e0e">
+<style>
+  :root{--bg:#0e0e0e;--card:#171717;--line:#262626;--ink:#f2f2ef;--mute:#8d8d88;--acc:#e2261c}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{color:inherit}
+  header{max-width:1120px;margin:0 auto;padding:28px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .marca{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em;text-decoration:none}
+  .led{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px 2px rgba(226,38,28,.55)}
+  nav a{font-size:14px;color:var(--mute);text-decoration:none}
+  nav a:hover{color:var(--ink)}
+  main{max-width:1120px;margin:0 auto;padding:56px 24px 24px}
+  h1{font-size:clamp(36px,6vw,64px);line-height:.98;letter-spacing:-.03em;font-weight:700}
+  .bajada{margin-top:14px;font-size:18px;color:var(--mute);max-width:620px}
+  .version{display:inline-block;margin-top:18px;font-size:11px;letter-spacing:.08em;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:3px 10px}
+  .botones{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .boton{display:inline-flex;flex-direction:column;gap:2px;padding:14px 20px;border-radius:14px;border:1px solid var(--line);background:var(--card);text-decoration:none;min-width:220px}
+  .boton b{font-size:16px}
+  .boton span{font-size:13px;color:var(--mute)}
+  .boton.principal{border-color:var(--acc)}
+  .boton:hover{border-color:#3a3a3a}
+  .boton.principal:hover{border-color:#ff4a3f}
+  h2{margin:56px 0 16px;font-size:12px;letter-spacing:.18em;color:var(--mute);font-weight:600}
+  .fotos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .fotos figure{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .fotos img{display:block;width:100%;height:auto;background:#111}
+  .fotos figcaption{padding:12px 16px 14px;font-size:14px;color:var(--mute)}
+  .ancha{grid-column:1 / -1}
+  ul.nuevo{list-style:none;display:grid;gap:10px;max-width:760px}
+  ul.nuevo li{padding-left:18px;position:relative;color:#d8d8d4}
+  ul.nuevo li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--acc)}
+  ol.pasos{display:grid;gap:14px;max-width:760px;padding-left:22px;color:#d8d8d4}
+  ol.pasos li{min-width:0}
+  code,pre{font-family:Menlo,Consolas,monospace;font-size:13px}
+  pre{max-width:100%;margin-top:8px;background:#121212;border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;color:var(--ink);white-space:pre}
+  .nota{margin-top:18px;max-width:760px;font-size:14px;color:var(--mute)}
+  footer{max-width:1120px;margin:0 auto;padding:48px 24px 40px;font-size:12px;color:var(--mute)}
+  @media (max-width:720px){.fotos{grid-template-columns:1fr}main{padding-top:40px}.boton{min-width:0;flex:1 1 100%}}
+</style>
+</head>
+<body>
+<header>
+  <a class="marca" href="../"><span class="led"></span>Estudio83</a>
+  <nav><a href="../#radios">← Radios</a></nav>
+</header>
+<main>
+  <h1>Radio para iPod</h1>
+  <p class="bajada">La Radio B&amp;O como app de verdad para iPod touch 4 y iPhone 4S con iOS 6 y jailbreak: el disco, el tocadiscos con su display de puntos, los relojes y la consola de bolsillo.</p>
+  <span class="version">VERSIÓN 1.42</span>
+  <div class="botones">
+    <a class="boton principal" href="RadioBO-1.42.deb" download data-goatcounter-click="radio-ipod-deb"><b>Bajar RadioBO-1.42.deb</b><span>Recomendado · se instala con OpenSSH o Cydia</span></a>
+    <a class="boton" href="RadioBO-1.42.ipa" download data-goatcounter-click="radio-ipod-ipa"><b>Bajar RadioBO-1.42.ipa</b><span>Alternativa · necesita AppSync</span></a>
+    <a class="boton" href="../i/" data-goatcounter-click="radio-ipod-web"><b>Versión web</b><span>La de antes, sin instalar nada</span></a>
+  </div>
+
+  <h2>LO NUEVO</h2>
+  <ul class="nuevo">
+    <li>El display del tocadiscos, calado en la carcasa con marco de metal: arriba la banda, la radio y la frecuencia; abajo el día, la temperatura y la hora.</li>
+    <li>Deslizándolo hacia abajo se abre hasta las teclas: el clima de ahora, la lluvia de las próximas 24 horas y el pronóstico de cuatro días.</li>
+    <li>Radio despertador: a la hora elegida prende la radio que dejaste puesta.</li>
+    <li>El átomo abre las geometrías: figuras 3D de alambre en isométrica, al azar, que nunca se repiten.</li>
+    <li>Tres luces para el display (manteniéndolo apretado): negro, verde y turquesa.</li>
+    <li>En los relojes, el modo noche solo oscurece el fondo.</li>
+  </ul>
+
+  <h2>CÓMO SE VE</h2>
+  <div class="fotos">
+    <figure><img src="cerrado.jpg" alt="El tocadiscos con el display de dos filas" loading="lazy"><figcaption>El tocadiscos con el display cerrado.</figcaption></figure>
+    <figure><img src="clima.jpg" alt="El display abierto con el clima y el despertador" loading="lazy"><figcaption>Abierto: clima, lluvia, pronóstico y despertador.</figcaption></figure>
+    <figure class="ancha"><img src="geometrias.jpg" alt="Doce geometrías 3D distintas" loading="lazy"><figcaption>Geometrías: doce de infinitas.</figcaption></figure>
+  </div>
+
+  <h2>CÓMO INSTALARLA</h2>
+  <ol class="pasos">
+    <li>El aparato tiene que tener iOS 6 con jailbreak y <b>OpenSSH</b> instalado desde Cydia.</li>
+    <li>Bajá el <code>.deb</code> a la computadora y copialo al aparato (cambiá <code>IP_DEL_IPHONE</code> por la que figura en Ajustes → Wi-Fi):
+      <pre>scp -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa RadioBO-1.42.deb root@IP_DEL_IPHONE:/var/root/</pre></li>
+    <li>Instalala (si ya tenés una versión anterior, se instala encima):
+      <pre>ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa root@IP_DEL_IPHONE "dpkg -i /var/root/RadioBO-1.42.deb &amp;&amp; su -c uicache mobile"</pre></li>
+    <li>Listo: el ícono aparece en la pantalla de inicio.</li>
+  </ol>
+  <p class="nota">La contraseña de fábrica de root es <code>alpine</code>. Si usás el <code>.ipa</code>, hace falta AppSync y un instalador de .ipa.</p>
+</main>
+<footer>© 2026 Estudio83</footer>
+<script data-goatcounter="https://estudio83.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
