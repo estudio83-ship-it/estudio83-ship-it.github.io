@@ -6,8 +6,8 @@ const kR = 130, kRCentro = 34, kAltoTecla = 78, kAnchoTecla = 64, kMarco = 6, kP
 /* los tres estilos de luz del display: negro, verde y turquesa */
 const ESTILOS = [
 	{ vidrio: [10, 10, 10], apagado: [255, 255, 255, 0.06], punto: [246, 246, 240], halo: [255, 250, 235, 0.16], brillo: 0.045 },
-	{ vidrio: [208, 232, 80], apagado: [52, 66, 8, 0.11], punto: [38, 48, 10], halo: [40, 52, 6, 0.2], brillo: 0.2 },
-	{ vidrio: [104, 170, 166], apagado: [6, 40, 40, 0.12], punto: [12, 22, 24], halo: [0, 30, 30, 0.22], brillo: 0.16 },
+	{ vidrio: [190, 236, 30], apagado: [44, 70, 0, 0.12], punto: [28, 44, 0], halo: [30, 50, 0, 0.2], brillo: 0.18 },   /* 1.44: verde más intenso */
+	{ vidrio: [40, 190, 182], apagado: [0, 44, 44, 0.13], punto: [4, 24, 26], halo: [0, 34, 34, 0.22], brillo: 0.14 },   /* 1.44: turquesa más intenso */
 ];
 const rgb = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a === undefined ? (c[3] === undefined ? 1 : c[3]) : a})`;
 
@@ -17,8 +17,9 @@ const tocadiscos = (() => {
 	const tfy = H - kAltoTecla;                       /* arriba de las teclas */
 	const c = { x: Math.round(W / 2) + 3, y: Math.round(tfy - 13 - kR) };   /* el centro del plato */
 	const altoDisplay = c.y - kR - 13;                /* la franja de arriba del plato */
-	const cerrada = { x: 12, y: 12, w: W - 24, h: Math.max(72, altoDisplay - 12 - 10) };   /* arriba de todo, hasta el disco */
-	const abierta = { x: 12, y: 12, w: W - 24, h: tfy - 10 - 12 };
+	const MD = 22;   /* 1.44: el display un poco más angosto */
+	const cerrada = { x: MD, y: 12, w: W - 2 * MD, h: Math.max(72, altoDisplay - 12 - 10) };   /* arriba de todo, hasta el disco */
+	const abierta = { x: MD, y: 12, w: W - 2 * MD, h: tfy - 10 - 12 };
 
 	/* ---------- el panel (quieto) ---------- */
 	const panel = lienzo(W, H, p);
@@ -272,24 +273,24 @@ const tocadiscos = (() => {
 	/* ---------- el display ---------- */
 	let estilo = guardado.leer('estiloDisplay', 0), abiertoDisp = false, geometria = false, geo = null;
 	function imagenMarco() {
-		const m = kMarco, lado = 2 * m + 20, l = lienzo(lado, lado), ctx = l.ctx;
+		const m = kMarco, lado = 2 * m + 28, l = lienzo(lado, lado), ctx = l.ctx;
 		const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
-		ctx.save(); rr(0, 0, lado, lado, m + 2); ctx.clip();
+		ctx.save(); rr(0, 0, lado, lado, m + 6); ctx.clip();
 		ctx.fillStyle = degrade(ctx, ['rgb(150,150,148)', 'rgb(236,236,234)'], 0, 0, 0, lado); ctx.fillRect(0, 0, lado, lado); ctx.restore();
-		ctx.save(); rr(0.75, 0.75, lado - 1.5, lado - 1.5, m + 1.25); ctx.clip();
+		ctx.save(); rr(0.75, 0.75, lado - 1.5, lado - 1.5, m + 5.25); ctx.clip();
 		ctx.fillStyle = degrade(ctx, ['rgb(238,238,236)', 'rgb(176,176,174)'], 0, 0, 0, lado); ctx.fillRect(0, 0, lado, lado);
 		let s = 5;
 		for (let y = 0; y < lado; y += 0.5) { s = (s * 1103515245 + 12345) >>> 0; const k = (s >>> 16) & 0xff; ctx.fillStyle = (k & 1 ? 'rgba(255,255,255,' : 'rgba(0,0,0,') + (0.03 + k / 255 * 0.05) + ')'; ctx.fillRect(0, y, lado, 0.5); }
 		const b = m - 1.5;
-		ctx.save(); rr(b, b, lado - 2 * b, lado - 2 * b, 3.5); ctx.clip();
+		ctx.save(); rr(b, b, lado - 2 * b, lado - 2 * b, 7.5); ctx.clip();
 		ctx.fillStyle = degrade(ctx, ['rgb(90,90,90)', 'rgb(250,250,248)'], 0, b, 0, lado - b); ctx.fillRect(0, 0, lado, lado); ctx.restore();
 		ctx.restore();
-		ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 0.5; rr(1.25, 1.25, lado - 2.5, lado - 2.5, m + 0.75); ctx.stroke();
-		ctx.fillStyle = 'rgba(0,0,0,.85)'; rr(m - 0.5, m - 0.5, lado - 2 * m + 1, lado - 2 * m + 1, 3); ctx.fill();
+		ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 0.5; rr(1.25, 1.25, lado - 2.5, lado - 2.5, m + 4.75); ctx.stroke();
+		ctx.fillStyle = 'rgba(0,0,0,.85)'; rr(m - 0.5, m - 0.5, lado - 2 * m + 1, lado - 2 * m + 1, 7); ctx.fill();
 		return l.toDataURL();
 	}
-	const marco = div(p, 0, 0, 0, 0, `border:10px solid transparent;border-image:url(${imagenMarco()}) ${Math.round(10 * S.R)} fill / 10px stretch;`);
-	const ventana = div(p, 0, 0, 0, 0, 'overflow:hidden;border-radius:2px');
+	const marco = div(p, 0, 0, 0, 0, `border:14px solid transparent;border-image:url(${imagenMarco()}) ${Math.round(14 * S.R)} fill / 14px stretch;`);
+	const ventana = div(p, 0, 0, 0, 0, 'overflow:hidden;border-radius:7px');
 	const anim = 'left .42s ease-in-out,top .42s ease-in-out,width .42s ease-in-out,height .42s ease-in-out';
 	function ponerVentana(r, animado) {
 		for (const el of [marco, ventana, toque]) el.style.transition = animado ? anim : 'none';
@@ -297,10 +298,11 @@ const tocadiscos = (() => {
 		for (const [el, x, y, w, h] of q) { el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.width = w + 'px'; el.style.height = h + 'px'; }
 	}
 	/* las dos filas */
-	const filas = lienzo(296, 72, ventana, 0, 0);
-	const letras = Math.floor((296 - 20 + kP) / (6 * kP));
-	const origen = { x: Math.round((296 - (letras * 6 * kP - kP)) / 2), y: Math.round((72 - (7 + 4 + 7) * kP) / 2) };
-	const fondoFilas = lienzo(296, 72);
+	const FW = cerrada.w;
+	const filas = lienzo(FW, 72, ventana, 0, 0);
+	const letras = Math.floor((FW - 20 + kP) / (6 * kP));
+	const origen = { x: Math.round((FW - (letras * 6 * kP - kP)) / 2), y: Math.round((72 - (7 + 4 + 7) * kP) / 2) };
+	const fondoFilas = lienzo(FW, 72);
 	const textos = ['', ''], corrido = [0, 0], espera = [0, 0];
 	let volHasta = 0, volVal = 0, vistos = '';
 	function vidrio(ctx, w, h, e) {
@@ -310,8 +312,8 @@ const tocadiscos = (() => {
 	}
 	function armarFondoFilas() {
 		const ctx = fondoFilas.ctx;
-		ctx.clearRect(0, 0, 296, 72);
-		vidrio(ctx, 296, 72, estilo);
+		ctx.clearRect(0, 0, FW, 72);
+		vidrio(ctx, FW, 72, estilo);
 		ctx.fillStyle = rgb(ESTILOS[estilo].apagado);
 		for (let f = 0; f < 2; f++) for (let ci = 0; ci < letras; ci++) for (let x = 0; x < 5; x++) for (let y = 0; y < 7; y++)
 			ctx.fillRect(origen.x + (ci * 6 + x) * kP, origen.y + (f * 11 + y) * kP, 1.5, 1.5);
@@ -329,8 +331,8 @@ const tocadiscos = (() => {
 		if (clave === vistos && !forzar) return;
 		vistos = clave;
 		const ctx = filas.ctx, st = ESTILOS[estilo];
-		ctx.clearRect(0, 0, 296, 72);
-		ctx.drawImage(fondoFilas, 0, 0, 296, 72);
+		ctx.clearRect(0, 0, FW, 72);
+		ctx.drawImage(fondoFilas, 0, 0, FW, 72);
 		const mapa = [];
 		[v0, v1].forEach((t, f) => {
 			for (let ci = 0; ci < Math.min(letras, t.length); ci++) {
@@ -369,9 +371,10 @@ const tocadiscos = (() => {
 	function mostrarVolumen(v) { volVal = v; volHasta = Date.now() + 1500; pintarFilas(true); }
 
 	/* el display grande: una grilla de puntos (un pixel por punto, agrandado sin suavizar) con la rejilla encima */
-	const mw = abierta.w - 16, mh = Math.floor((abierta.h - 72 - 8) / kP) * kP;
-	const cols = mw / kP, rows = mh / kP, oyMenu = 0;
-	const matriz = div(ventana, 8, 72, mw, mh);   /* si el display cerrado es alto, ya se ve el clima de ahora */
+	const mw = letras * 6 * kP, mh = Math.floor((abierta.h - 72 - 8) / kP) * kP;
+	const cols = mw / kP, rows = mh / kP;
+	let scroll = 0;   /* 1.44: el menú se corre de a renglones */
+	const matriz = div(ventana, origen.x, 72, mw, mh);   /* si el display cerrado es alto, ya se ve el clima de ahora */
 	const chico = document.createElement('canvas'); chico.width = cols; chico.height = rows;
 	chico.className = 'abs pix'; chico.style.cssText += `left:0;top:0;width:${mw}px;height:${mh}px`;
 	const halo = document.createElement('canvas'); halo.width = cols; halo.height = rows;
@@ -433,10 +436,11 @@ const tocadiscos = (() => {
 				clima = k; pintarDisplay(); pintarMenu();
 			}).catch(() => { climaPedido = 0; });
 	}
-	const alarma = () => Object.assign({ on: false, h: 7, m: 0, b: radio.b, pos: radio.pos[radio.b], nombre: radio.actual()[0], ultima: '' }, guardado.leer('alarma', {}));
+	/* 1.44: el despertador prende la radio que esté puesta en ese momento */
+	const alarma = () => Object.assign({ on: false, h: 7, m: 0, ultima: '' }, guardado.leer('alarma', {}));
 	function tocoDespertador(z) {
 		const a = alarma();
-		if (z === 'alarma') { a.on = !a.on; if (a.on) { a.b = radio.b; a.pos = radio.pos[radio.b]; a.nombre = radio.actual()[0]; } }
+		if (z === 'alarma') a.on = !a.on;
 		else if (z === 'hora') a.h = (a.h + 1) % 24;
 		else if (z === 'minutos') a.m = (a.m + 5) % 60;
 		a.ultima = '';
@@ -450,19 +454,52 @@ const tocadiscos = (() => {
 		const hoy = d.toDateString();
 		if (a.ultima === hoy) return;
 		a.ultima = hoy; guardado.poner('alarma', a);
-		if (a.b >= 0 && a.b < BANDAS.length && a.pos >= 0 && a.pos < BANDAS[a.b][1].length) { radio.b = a.b; radio.pos[a.b] = a.pos; guardarRadio(); pagina1.mostrar(); }
 		if (radio.on) tocar(); else encender(true);
 		mediaSesion(); radio.avisar();
-		try { if ('Notification' in window && Notification.permission === 'granted' && document.hidden) new Notification('Radio B&O', { body: 'Despertador: ' + a.nombre, icon: 'icon-192.png' }); } catch (e) {}
+		try { if ('Notification' in window && Notification.permission === 'granted' && document.hidden) new Notification('Radio B&O', { body: 'Despertador: ' + radio.actual()[0], icon: 'icon-192.png' }); } catch (e) {}
 	}
+	/* ---------- lo que está sonando ---------- */
+	/* Las radios de Triton (las de StreamTheWorld) y las de SomaFM dicen qué tema pasan: título, artista, álbum y
+	   cuánto dura. Se pregunta cada 20 s mientras se ve la página. */
+	let tema = null, temaDe = '', temaPedido = 0, desde = 0, sonandoDe = '';
+	radio.alCambiar.push(() => {
+		const k = radio.on ? radio.b + '/' + radio.pos[radio.b] : '';
+		if (k !== sonandoDe) { sonandoDe = k; desde = Date.now(); tema = null; temaPedido = 0; pedirTema(); }
+	});
+	function pedirTema() {
+		if (!radio.on || radio.wt() || pag.actual !== 1 || document.hidden) return;
+		const url = radio.actual()[1] || '', de = sonandoDe, ahora = Date.now();
+		if (ahora - temaPedido < 20000) return;
+		temaPedido = ahora;
+		const ok = t => { if (de === sonandoDe) { tema = t; temaDe = de; pintarMenu(); } };
+		const mt = url.match(/livestream-redirect\/([A-Z0-9_]+)/), sm = url.match(/somafm\.com\/([a-z0-9]+)-\d+/);
+		if (mt) {
+			fetch('https://np.tritondigital.com/public/nowplaying?mountName=' + mt[1] + '&numberToFetch=1&eventType=track').then(r => r.text()).then(x => {
+				const d = new DOMParser().parseFromString(x, 'text/xml'), pr = n => { const e = d.querySelector('property[name="' + n + '"]'); return e ? e.textContent.trim() : ''; };
+				const titulo = pr('cue_title');
+				ok(titulo ? { titulo: limpio(titulo), artista: limpio(pr('track_artist_name')), album: limpio(pr('track_album_name')),
+					inicio: +pr('cue_time_start') || 0, dura: (+pr('cue_time_duration') || 0) / 1000 } : null);
+			}).catch(() => {});
+		} else if (sm) {
+			fetch('https://somafm.com/songs/' + sm[1] + '.json').then(r => r.json()).then(j => {
+				const t = j.songs && j.songs[0];
+				ok(t ? { titulo: limpio(t.title), artista: limpio(t.artist), album: limpio(t.album), inicio: (+t.date || 0) * 1000, dura: 0 } : null);
+			}).catch(() => {});
+		}
+	}
+	setInterval(pedirTema, 5000);
 	function datosMenu() {
-		const a = alarma();
+		const a = alarma(), s = radio.actual();
 		const k = clima || { hay: 0, lluvia: [], hora0: 0, dias: [] };
-		return Object.assign({}, k, { alarma: a.on, alarmaH: a.h, alarmaM: a.m, alarmaRadio: limpio(a.on ? a.nombre : radio.actual()[0]).toUpperCase() });
+		return Object.assign({}, k, {
+			cielo: (k.cielo || '').toLowerCase(), dias: (k.dias || []).map(d => Object.assign({}, d, { dia: d.dia.toLowerCase() })),
+			alarma: a.on, alarmaH: a.h, alarmaM: a.m, emisora: limpio(s[0]), banda: radio.banda(), frecuencia: limpio(s[2] || ''),
+			encendida: radio.on, desde, tema: temaDe === sonandoDe ? tema : null, fecha: new Date(),
+		});
 	}
 	function pintarMenu() {
 		if (geometria) return;
-		Tab.menu(lz, datosMenu(), performance.now() / 1000, oyMenu);
+		Tab.menu(lz, datosMenu(), performance.now() / 1000, scroll);
 		mostrarMatriz();
 	}
 	/* filas fijas: arriba la banda, la radio y la frecuencia; abajo el día, la temperatura y la hora */
@@ -484,14 +521,14 @@ const tocadiscos = (() => {
 	function abrir() {
 		if (abiertoDisp) return;
 		abiertoDisp = true; geometria = false;
-		pedirClima(); pintarMenu();
+		pedirClima(); pedirTema(); pintarMenu();
 		ponerVentana(abierta, true);
 		volumen.style.opacity = 0; volumen.style.pointerEvents = 'none';
 		setTimeout(() => { if (abiertoDisp) plato.style.visibility = tornillos.style.visibility = 'hidden'; }, 420);
 	}
 	function cerrar() {
 		if (!abiertoDisp) return;
-		abiertoDisp = false; geometria = false;
+		abiertoDisp = false; geometria = false; scroll = 0;
 		plato.style.visibility = tornillos.style.visibility = 'visible';
 		ponerVentana(cerrada, true);
 		volumen.style.opacity = 1; volumen.style.pointerEvents = '';
@@ -512,8 +549,17 @@ const tocadiscos = (() => {
 		try { toque.setPointerCapture(e.pointerId); } catch (_) {}
 	});
 	toque.addEventListener('pointermove', e => {
-		if (!td || e.pointerId !== td.id || td.hecho) return;
+		if (!td || e.pointerId !== td.id) return;
 		const q = enEscenario(e), dx = q.x - td.x, dy = q.y - td.y;
+		/* abierto: el dedo corre el menú de a renglones; arriba de todo, bajar el dedo lo cierra */
+		if (abiertoDisp && !geometria && !td.cierra && (td.corre || (Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)))) {
+			if (!td.corre) { td.corre = true; td.s0 = scroll; td.hecho = true; clearTimeout(td.largo); if (scroll === 0 && dy > 0) td.cierra = true; }
+			if (td.cierra) { if (dy > 22) cerrar(); return; }
+			const n = Math.max(0, Math.min(Tab.maxScroll(lz), td.s0 - Math.round(dy / (Tab.RENGLON * kP))));
+			if (n !== scroll) { scroll = n; pintarMenu(); }
+			return;
+		}
+		if (td.hecho) return;
 		if (Math.abs(dy) > 22 && Math.abs(dy) > Math.abs(dx)) {
 			td.hecho = true; clearTimeout(td.largo);
 			if (dy > 0) abrir(); else cerrar();
@@ -527,9 +573,9 @@ const tocadiscos = (() => {
 		if (hecho || movio || e.type === 'pointercancel') return;
 		if (!abiertoDisp) return abrir();
 		if (geometria) { geometria = false; pintarMenu(); return; }
-		const mx = q.x - abierta.x - 8, my = q.y - abierta.y - 72;
+		const mx = q.x - abierta.x - origen.x, my = q.y - abierta.y - 72;
 		if (my < 0) return cerrar();
-		const z = Tab.zona(Math.floor(mx / kP), Math.floor(my / kP) - oyMenu);
+		const z = Tab.zona(Math.floor(mx / kP), Math.floor(my / kP), scroll);
 		if (z === 'atomo') { geometria = true; geo = Tab.geoEmpezar((Math.random() * 4e9) >>> 0); Tab.borrar(lz); antes = 0; return; }
 		if (z) tocoDespertador(z);
 	};

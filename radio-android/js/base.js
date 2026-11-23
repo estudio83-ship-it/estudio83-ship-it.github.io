@@ -100,7 +100,7 @@ const arribaDisco = () => Math.max(0, Math.round((S.H - 286) / 2 - 10));   /* do
 const puntos = document.getElementById('puntos');
 let escondePuntos = 0;
 function pintarPuntos() {
-	const oscuro = (pag.actual === 0 || pag.actual === 2) && noche.n >= 0.5;
+	const oscuro = ((pag.actual === 0 || pag.actual === 2) && noche.n >= 0.5) || (pag.actual === 2 && guardado.leer('disenoReloj', 0) === 3);
 	puntos.classList.toggle('oscuro', oscuro);
 	[...puntos.children].forEach((p, i) => p.classList.toggle('esta', i === pag.actual));
 }

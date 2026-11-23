@@ -105,53 +105,93 @@ const Tab = (() => {
 	}
 	const dos = n => String(n).padStart(2, '0');
 
-	/* el menú entero en 140 x 140 puntos, desde la fila oy del lienzo */
-	function menu(l, c, t, oy = 0) {
-		borrar(l);
-		const W = l.ancho, Y = y => y + oy;
-		if (c.hay) {
-			icono(l, c.codigo, 0, Y(0), 2);
-			texto(l, c.temp + '\xb0', 36, Y(1), 2, 255);
-			texto(l, c.cielo, 36, Y(20), 1, 255);
-			derecha(l, 'MAX ' + c.max + '\xb0', W, Y(1), 1);
-			derecha(l, 'MIN ' + c.min + '\xb0', W, Y(10), 1);
-		} else {
-			texto(l, 'BUSCANDO', 0, Y(6), 1, 255);
-			texto(l, 'EL CLIMA...', 0, Y(16), 1, 255);
-		}
-		texto(l, 'LLUVIA PROXIMAS 24 HS', 0, Y(33), 1, 255);
-		const base = Y(56);
-		for (let h = 0; h < 24; h++) {
-			const x = 10 + h * 5, alto = c.hay ? Math.floor(((c.lluvia[h] || 0) * 14 + 50) / 100) : 0;
-			for (let i = 0; i < 4; i++) { punto(l, x + i, base, 255); for (let y = 1; y < alto; y++) punto(l, x + i, base - y, 255); }
-		}
-		for (let y = 0; y <= 14; y += 2) if (y % 7 === 0) punto(l, 7, base - y, 255);
-		texto(l, '%', 0, Y(43), 1, 255);
-		for (let h = 0; h < 24; h += 6) texto(l, dos((c.hora0 + h) % 24), 10 + h * 5, Y(59), 1, 255);
-		punteada(l, Y(69), 0, W - 1);
-		const n = c.hay ? c.dias.length : 0, col = Math.floor(W / 4);
-		for (let d = 0; d < n && d < 4; d++) {
-			const m = d * col + (col >> 1), k = c.dias[d];
-			centrado(l, k.dia, m, Y(72));
-			icono(l, k.codigo, m - 7, Y(80), 1);
-			centrado(l, k.max + '/' + k.min, m, Y(96));
-			const s = k.lluvia + '%', w = ancho(s, 1) + 5;
-			gota(l, m - (w >> 1), Y(105));
-			texto(l, s, m - (w >> 1) + 5, Y(104), 1, 255);
-		}
-		punteada(l, Y(113), 0, 102);
-		texto(l, 'DESPERTADOR', 0, Y(117), 1, 255);
-		for (let x = 70; x < 87; x++) for (let y = 115; y < 126; y++) punto(l, x, Y(y), 255);
-		texto(l, c.alarma ? 'SI' : 'NO', 73, Y(117), 1, 0);
-		texto(l, dos(c.alarmaH) + ':' + dos(c.alarmaM), 0, Y(127), 2, c.alarma ? 255 : 110);
-		texto(l, c.alarmaRadio.slice(0, 6), 64, Y(131), 1, c.alarma ? 255 : 110);
-		atomo(l, W - 15, Y(125), t);
+	/* 1.44: el menú es una grilla de letras, como las dos filas de arriba: la misma letra, el mismo tono y el mismo
+	   paso (6 puntos por letra, 11 por renglón). Se corre de a renglones con el dedo. Lo que suena, el mes, el clima
+	   y el despertador; al final el átomo. */
+	const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+	const RENGLON = 11;
+	const alinear = (a, b, C) => { const h = C - a.length - b.length; return h < 1 ? (a + ' ' + b).slice(0, C) : a + ' '.repeat(h) + b; };
+	const reloj = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ':' + dos(s % 60); };
+	function hace(ms) {
+		const m = Math.floor(ms / 60000);
+		return m < 1 ? 'recien' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' h ' + dos(m % 60);
 	}
-	function zona(x, y) {
-		if (y >= 112 && y < 127 && x >= 66 && x < 92) return 'alarma';
-		if (y >= 125 && x < 28) return 'hora';
-		if (y >= 125 && x >= 28 && x < 62) return 'minutos';
-		if (y >= 106 && x >= 104) return 'atomo';
+	/* un texto largo se corre de a una letra, con una pausa al principio y al final */
+	function corrido(txt, C, t) {
+		if (txt.length <= C) return txt;
+		const sobra = txt.length - C, ciclo = sobra + 16, k = Math.floor(t * 4) % ciclo;
+		return txt.substr(Math.max(0, Math.min(sobra, k - 8)), C);
+	}
+	let ultimas = [], atomoEn = -1;
+	function lineas(c, C, t) {
+		const L = [], pon = (s, extra) => L.push(Object.assign({ s: s || '', inv: [], z: [] }, extra || {}));
+		const tm = c.tema;
+		pon(alinear('Sonando', c.encendida ? hace(Date.now() - c.desde) : 'apagada', C));
+		if (tm && tm.titulo) {
+			pon(corrido(tm.titulo, C, t));
+			pon(corrido(tm.artista || '', C, t));
+			pon(corrido(tm.album || '', C, t));
+			if (tm.dura > 0) { const va = Math.min(tm.dura, (Date.now() - tm.inicio) / 1000); pon(alinear(reloj(va), reloj(tm.dura), C)); }
+			else pon(c.emisora);
+		} else {
+			pon(c.emisora); pon(alinear(c.banda, c.frecuencia, C)); pon(c.encendida ? 'sin datos del tema' : ''); pon('');
+		}
+		pon('');
+		const f = c.fecha, y = f.getFullYear(), m = f.getMonth(), hoy = f.getDate();
+		const primero = (new Date(y, m, 1).getDay() + 6) % 7, dias = new Date(y, m + 1, 0).getDate();
+		pon(alinear(MESES[m], String(y), C));
+		pon('lu ma mi ju vi sa do');
+		for (let sem = 0; sem < 6; sem++) {
+			let s = '', inv = [];
+			for (let d = 0; d < 7; d++) {
+				const n = sem * 7 + d - primero + 1;
+				s += (n >= 1 && n <= dias ? String(n).padStart(2) : '  ') + (d < 6 ? ' ' : '');
+				if (n === hoy) inv.push([d * 3, d * 3 + 2]);
+			}
+			pon(s, { inv });
+		}
+		pon('');
+		if (c.hay) {
+			pon(alinear('Clima', c.temp + '\xb0', C));
+			pon(c.cielo);
+			pon('max ' + c.max + '\xb0  min ' + c.min + '\xb0');
+			let pm = 0, hm = 0;
+			(c.lluvia || []).forEach((v, i) => { if (v > pm) { pm = v; hm = (c.hora0 + i) % 24; } });
+			pon(pm >= 10 ? 'lluvia ' + pm + '% a las ' + dos(hm) : 'sin lluvia hoy');
+			const d = c.dias || [], dia = k => k ? (k.dia + ' ' + k.max + '/' + k.min).padEnd(9) : '';
+			pon((dia(d[0]) + '  ' + dia(d[1])).trimEnd());
+			pon((dia(d[2]) + '  ' + dia(d[3])).trimEnd());
+		} else { pon(alinear('Clima', '...', C)); pon('buscando...'); pon(''); pon(''); pon(''); pon(''); }
+		pon('');
+		const sn = c.alarma ? 'si' : 'no';
+		pon(alinear('Despertador', sn, C), { inv: [[C - 2, C]], z: [[C - 3, C, 'alarma']] });
+		pon(alinear(dos(c.alarmaH) + ':' + dos(c.alarmaM), c.emisora, C), { z: [[0, 2, 'hora'], [3, 5, 'minutos']] });
+		pon('');
+		atomoEn = L.length;
+		pon('', { z: [[0, C, 'atomo']] }); pon('', { z: [[0, C, 'atomo']] }); pon('', { z: [[0, C, 'atomo']] });
+		return L;
+	}
+	const visibles = l => Math.floor((l.alto + 4) / RENGLON);
+	function menu(l, c, t, scroll = 0) {
+		borrar(l);
+		const C = Math.floor((l.ancho + 1) / 6), L = ultimas = lineas(c, C, t), n = visibles(l);
+		for (let i = scroll; i < Math.min(L.length, scroll + n); i++) {
+			const y = (i - scroll) * RENGLON + 1, ln = L[i];
+			/* lo marcado (hoy, el sí / no) va en un recuadro de un punto: se lee igual de claro que lo demás */
+			for (const [a, b] of ln.inv) {
+				const x0 = a * 6 - 2, x1 = b * 6 - 1, y0 = y - 2, y1 = y + 8;
+				for (let x = x0; x <= x1; x++) { punto(l, x, y0, 255); punto(l, x, y1, 255); }
+				for (let yy = y0; yy <= y1; yy++) { punto(l, x0, yy, 255); punto(l, x1, yy, 255); }
+			}
+			texto(l, ln.s, 0, y, 1, 255);
+		}
+		if (atomoEn + 3 > scroll && atomoEn < scroll + n) atomo(l, l.ancho >> 1, (atomoEn - scroll) * RENGLON + 16, t);
+	}
+	const maxScroll = l => Math.max(0, ultimas.length - visibles(l));
+	function zona(x, y, scroll = 0) {
+		const ln = ultimas[Math.floor(y / RENGLON) + scroll], col = Math.floor(x / 6);
+		if (!ln) return '';
+		for (const [a, b, nombre] of ln.z) if (col >= a - 1 && col <= b) return nombre;
 		return '';
 	}
 
@@ -412,5 +452,5 @@ const Tab = (() => {
 		if (g.fam[0] >= 0 && m < 1) figura(l, g.fam[0], g.p[0], g.t, r, Math.floor(255 * (1 - m)));
 		figura(l, g.fam[1], g.p[1], g.t, r, Math.floor(255 * m));
 	}
-	return { lienzoPuntos, borrar, menu, zona, geoEmpezar, geoPaso };
+	return { lienzoPuntos, borrar, menu, zona, maxScroll, RENGLON, geoEmpezar, geoPaso };
 })();

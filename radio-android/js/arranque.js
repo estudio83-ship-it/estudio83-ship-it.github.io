@@ -17,3 +17,4 @@ addEventListener('resize', () => {
 	S.esc = esc;
 });
 if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+horizontal.revisar();
