@@ -16,5 +16,11 @@ addEventListener('resize', () => {
 	app.style.transform = `translateX(${Math.round((w - 320 * esc) / 2)}px) scale(${esc})`;
 	S.esc = esc;
 });
-if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+	/* 1.45: si llega una versión nueva, la página se recarga una vez sola para mostrarla */
+	const habia = !!navigator.serviceWorker.controller;
+	let recargada = false;
+	navigator.serviceWorker.addEventListener('controllerchange', () => { if (habia && !recargada) { recargada = true; location.reload(); } });
+	navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
+}
 horizontal.revisar();

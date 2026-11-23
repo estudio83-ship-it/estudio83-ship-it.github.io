@@ -1,5 +1,5 @@
 /* Guarda la app para abrirla sin conexión (las radios y el clima siempre van por internet). */
-const VERSION = 'rbo-web-1.44';
+const VERSION = 'rbo-web-1.45';
 const ARCHIVOS = [
   './', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-180.png',
   'js/arranque.js',
@@ -72,11 +72,12 @@ self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
+/* 1.45: primero lo nuevo de internet (así cada versión se ve enseguida) y, sin conexión, lo guardado */
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin) return;   /* radios, clima, hls: directo */
-  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(r => r || fetch(e.request).then(res => {
+  e.respondWith(fetch(e.request, { cache: 'no-cache' }).then(res => {
     if (res.ok) { const copia = res.clone(); caches.open(VERSION).then(c => c.put(e.request, copia)); }
     return res;
-  })).catch(() => caches.match('index.html')));
+  }).catch(() => caches.match(e.request, { ignoreSearch: true }).then(r => r || caches.match('index.html'))));
 });
