@@ -86,16 +86,24 @@ function sinEfecto() {
 	if (actx) { amIn.gain.value = 0; limpioIn.gain.value = 0; soplido.gain.value = 0; }
 }
 function pararPlano() { if (plano) { try { plano.pause(); plano.removeAttribute('src'); plano.load(); } catch (e) {} plano = null; } }
+/* 1.46: el white noise es un archivo de 10 minutos (el mismo ruido filtrado del iPod) cuyo final se funde con el
+   principio: al repetirse no hay silencio, bajón ni escalón, y en 10 minutos no se reconoce nada que vuelva. */
 function ruidoUrl() {
-	const sr = 22050, n = sr * 12, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+	const sr = 22050, n = sr * 600, F = sr * 2, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
 	const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
 	w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
 	v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
-	let l = 0; const fade = sr * .5;
+	const y = new Float32Array(n + F);
+	let l = 0, x = (Math.random() * 4294967295) >>> 0 || 1;
+	for (let i = 0; i < n + F; i++) {
+		x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0;
+		l = .55 * l + .45 * (x / 2147483648 - 1);
+		y[i] = l * .668;
+	}
 	for (let i = 0; i < n; i++) {
-		l = .55 * l + .45 * (Math.random() * 2 - 1);
-		const g = i > n - fade ? (n - i) / fade : i < fade ? i / fade : 1;
-		v.setInt16(44 + i * 2, Math.round(l * .42 * 32767 * (.5 + .5 * g)), true);
+		/* los primeros 2 s se mezclan (a potencia constante) con lo que seguiría después del final */
+		const t = i < F ? i / F : 1, s = i < F ? y[i] * Math.sqrt(t) + y[n + i] * Math.sqrt(1 - t) : y[i];
+		v.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, Math.round(s * 32767))), true);
 	}
 	return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
 }
